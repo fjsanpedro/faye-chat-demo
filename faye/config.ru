@@ -11,9 +11,7 @@ class FayeTokenAuth
   end
 
   def outgoing(message, callback)
-    if message['ext'] && message['ext']['auth_token']
-      message['ext'] = {}
-    end
+    message['ext'] = {} if message['ext'] && message['ext']['auth_token']
     callback.call(message)
   end
 end
