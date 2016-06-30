@@ -1,0 +1,44 @@
+$(function () {
+  "use strict";
+
+  window.client = new Faye.Client("<%= ENV['FAYE_HOST'] %>/faye");
+  window.addMessengerMessage = addMessengerMessage;
+  window.scrollBottom = scrollBottom;
+  window.setMessageFormData = setMessageFormData;
+
+  function addMessengerMessage(payload) {
+    var container;
+    if ((container = $('.chat-container .wrapper')).length){
+      container.append(payload);
+    }
+    $('.chat-container .wrapper').trigger('afterMessageContentAdded');
+  }
+
+  function setMessageFormData(){
+    $('.message-form #message_user_name').val(userName());
+    $('.message-form #message_user_color').val(userColor());
+  }
+
+  function scrollBottom(){
+    $('.wrapper').animate({scrollTop: $('.wrapper').get(0).scrollHeight});
+  }
+
+  $(document).ready(function(){
+    var channels;
+    client.subscribe('/chat', function(data) {
+      $('.chat-container .wrapper').trigger('beforeAddingNewMessage');
+      addMessengerMessage(data.message);
+      $('.chat-container .wrapper').trigger('afterAddingNewMessage');
+    });
+  });
+
+  $('.wrapper').on('afterAddingNewMessage', function(){
+    scrollBottom();
+  });
+
+
+  $(document).ready(function(){
+    scrollBottom();
+    setMessageFormData();
+  })
+});

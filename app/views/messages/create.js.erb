@@ -1,0 +1,10 @@
+<% if @message.valid? %>
+  // addMessengerMessage('<%= j(render partial: "message", locals: { message: @message }) %>');
+  publisher = client.publish("/chat", {
+    message: '<%= j(render partial: "message", locals: { message: @message }) %>'
+  });
+
+  publisher.errback(function() {
+    console.log('There was an error while posting your comment.');
+  });
+<% end %>

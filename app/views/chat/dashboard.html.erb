@@ -1,0 +1,29 @@
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+  	    <div class="panel panel-primary chat-container">
+            <div class="panel-heading"><strong>Chat Window</strong></div>
+            <div class="panel-body wrapper">
+              <% @messages.each do |message| %>
+                <%= render message %>
+              <% end %>
+            </div>
+        </div>
+        <%= simple_form_for :message,
+                            url: messages_path,
+                            remote: true,
+                            html: { class: 'message-form' },
+                            method: :post do |f| %>
+         <%= f.input :user_name, as: :hidden %>
+         <%= f.input :user_color, as: :hidden %>
+         <%= f.input :content,
+                     label: false,
+                      required: true,
+                      placeholder: 'Escribe tu mensaje',
+                      autofocus: true,
+                      input_html: { autocomplete: 'off', class: 'form-control' } %>
+        <% end %>
+      </div>
+	</div>
+</div>
+<%= render 'user_modal' %>
